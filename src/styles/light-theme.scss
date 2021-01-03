@@ -1,0 +1,31 @@
+@import '~@angular/material/theming';
+
+.light-theme {
+  $primary: mat-palette($mat-indigo);
+  $accent: mat-palette($mat-pink, A200, A100, A400);
+  $warn: mat-palette($mat-red);
+
+  $theme: mat-light-theme(
+    (
+      color: (
+        primary: $primary,
+        accent: $accent,
+        warn: $warn
+      )
+    )
+  );
+
+  .primary-color {
+    color: mat-color($primary) !important;
+  }
+
+  .accent-color {
+    color: mat-color($accent) !important;
+  }
+
+  .warn-color {
+    color: mat-color($warn) !important;
+  }
+
+  @include angular-material-color($theme);
+}
