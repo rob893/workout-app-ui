@@ -11,6 +11,9 @@
       <li *ngIf="!isAuth"><a routerLink="/login">Login</a></li>
       <li *ngIf="isAuth"><a routerLink="/training">Training</a></li>
       <li *ngIf="isAuth">Logout</li>
+      <mat-slide-toggle [checked]="isDarkTheme | async" (change)="toggleDarkTheme($event.checked)"
+        >Dark theme</mat-slide-toggle
+      >
       <!-- <app-theme-picker></app-theme-picker> -->
     </ul>
   </div>

@@ -1,16 +1,25 @@
-/* tslint:disable:no-unused-variable */
-
-import { TestBed, async, inject } from '@angular/core/testing';
+import { Environment } from '../models/core';
 import { EnvironmentService } from './environment.service';
 
-describe('Service: Environment', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [EnvironmentService]
+function getEnvMock(env?: Partial<Environment>): Environment {
+  return {
+    production: false,
+    env: 'development',
+    localStoragePrefix: 'test-prefix',
+    ...env
+  };
+}
+
+describe('EnvironmentService', () => {
+  describe('production', () => {
+    const tests = [true, false];
+
+    tests.forEach(test => {
+      it(`should be ${test}`, () => {
+        const service = new EnvironmentService(getEnvMock({ production: test }));
+
+        expect(service.production).toBe(test);
+      });
     });
   });
-
-  it('should ...', inject([EnvironmentService], (service: EnvironmentService) => {
-    expect(service).toBeTruthy();
-  }));
 });
