@@ -24,4 +24,8 @@ export class EnvironmentService implements Environment {
   public get env(): 'development' | 'production' {
     return this.environment.env;
   }
+
+  public get workoutAppBaseUrl(): string {
+    return this.environment.workoutAppBaseUrl;
+  }
 }

@@ -8,7 +8,8 @@ import { commonEnvironment } from './environment.common';
 export const environment: Environment = {
   ...commonEnvironment,
   production: false,
-  env: 'development'
+  env: 'development',
+  workoutAppBaseUrl: 'https://localhost:5001/api'
 };
 
 /*
