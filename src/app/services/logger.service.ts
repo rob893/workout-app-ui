@@ -1,10 +1,30 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
+import { LOGGER } from '../core/global-providers';
+import { Logger } from '../models/core';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LoggerService {
+export class LoggerService implements Logger {
+  private readonly logger: Logger;
 
-constructor() { }
+  public constructor(@Inject(LOGGER) logger: Logger) {
+    this.logger = logger;
+  }
 
+  public debug(...args: any[]): void {
+    this.logger.debug(args);
+  }
+
+  public info(...args: any[]): void {
+    this.logger.debug(args);
+  }
+
+  public warn(...args: any[]): void {
+    this.logger.debug(args);
+  }
+
+  public error(...args: any[]): void {
+    this.logger.debug(args);
+  }
 }

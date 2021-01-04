@@ -6,12 +6,11 @@ import { EnvironmentService } from './environment.service';
   providedIn: 'root'
 })
 export class LocalStorageService {
-  @Inject(BROWSER_STORAGE)
   private readonly storage: Storage;
 
   private readonly storagePrefix: string;
 
-  public constructor(storage: Storage, { localStoragePrefix, env }: EnvironmentService) {
+  public constructor(@Inject(BROWSER_STORAGE) storage: Storage, { localStoragePrefix, env }: EnvironmentService) {
     this.storage = storage;
     this.storagePrefix = `${localStoragePrefix}-${env}-`;
   }

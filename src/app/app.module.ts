@@ -13,10 +13,27 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { WelcomeComponent } from './views/welcome/welcome.component';
 import { ThemePickerModule } from './components/theme-picker/theme-picker.component';
 import { HttpClientModule } from '@angular/common/http';
+import { AuthService } from './services/auth.service';
+import { JwtModule, JWT_OPTIONS, JwtConfig } from '@auth0/angular-jwt';
+import { EnvironmentService } from './services/environment.service';
+
+function jwtOptionsFactory(authService: AuthService, envService: EnvironmentService): JwtConfig {
+  return {
+    tokenGetter: authService.getAccessToken,
+    allowedDomains: envService.allowedHosts
+  };
+}
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent, SidenavListComponent, WelcomeComponent],
   imports: [
+    JwtModule.forRoot({
+      jwtOptionsProvider: {
+        provide: JWT_OPTIONS,
+        useFactory: jwtOptionsFactory,
+        deps: [AuthService, EnvironmentService]
+      }
+    }),
     MaterialModule,
     FlexLayoutModule,
     HttpClientModule,

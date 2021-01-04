@@ -3,6 +3,7 @@ export interface Environment {
   env: 'development' | 'production';
   localStoragePrefix: string;
   workoutAppBaseUrl: string;
+  allowedHosts: string[];
 }
 
 export interface Logger {

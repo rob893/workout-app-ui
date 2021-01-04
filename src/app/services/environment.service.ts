@@ -6,10 +6,9 @@ import { Environment } from '../models/core';
   providedIn: 'root'
 })
 export class EnvironmentService implements Environment {
-  @Inject(ENVIRONMENT)
   private readonly environment: Environment;
 
-  public constructor(environment: Environment) {
+  public constructor(@Inject(ENVIRONMENT) environment: Environment) {
     this.environment = environment;
   }
 
@@ -27,5 +26,9 @@ export class EnvironmentService implements Environment {
 
   public get workoutAppBaseUrl(): string {
     return this.environment.workoutAppBaseUrl;
+  }
+
+  public get allowedHosts(): string[] {
+    return [...this.environment.allowedHosts];
   }
 }

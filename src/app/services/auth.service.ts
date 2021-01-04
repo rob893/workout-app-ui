@@ -190,30 +190,32 @@ export class AuthService extends WorkoutAppBaseService {
     }
 
     if (this.isTokenExpired(this.accessToken)) {
-      await this.refreshAccessToken();
+      await this.refreshAccessToken().toPromise();
     }
 
     return this.accessToken;
   }
 
-  public async refreshAccessToken(): Promise<RefreshTokenResponse> {
-    const result = await this.httpClient
+  public refreshAccessToken(): Observable<RefreshTokenResponse> {
+    return this.httpClient
       .post<RefreshTokenResponse>('auth/refreshToken', {
         token: this.accessToken,
         refreshToken: this.refreshToken,
         deviceId: this.deviceId
       })
-      .toPromise();
+      .pipe(
+        map(response => {
+          const { token, refreshToken } = response;
 
-    const { token, refreshToken } = result;
+          this.cachedAccessToken = token;
+          this.cachedRefreshToken = refreshToken;
 
-    this.cachedAccessToken = token;
-    this.cachedRefreshToken = refreshToken;
+          this.localStorageService.setItem(this.accessTokenStorageKey, token);
+          this.localStorageService.setItem(this.refreshTokenStorageKey, refreshToken);
 
-    this.localStorageService.setItem(this.accessTokenStorageKey, token);
-    this.localStorageService.setItem(this.refreshTokenStorageKey, refreshToken);
-
-    return result;
+          return response;
+        })
+      );
   }
 
   public isTokenExpired(token: string, expOffsetInSeconds: number = 300): boolean {
