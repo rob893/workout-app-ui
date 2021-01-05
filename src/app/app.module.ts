@@ -19,7 +19,7 @@ import { EnvironmentService } from './core/services/environment.service';
 import { LoginComponent } from './views/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DashboardComponent } from './views/dashboard/dashboard.component';
-import { RefreshTokenInterceptorInterceptor } from './core/interceptors/refresh-token-interceptor.interceptor';
+import { RefreshTokenInterceptor } from './core/interceptors/refresh-token.interceptor';
 
 function jwtOptionsFactory(authService: AuthService, envService: EnvironmentService): JwtConfig {
   return {
@@ -58,7 +58,7 @@ function jwtOptionsFactory(authService: AuthService, envService: EnvironmentServ
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: RefreshTokenInterceptorInterceptor,
+      useClass: RefreshTokenInterceptor,
       multi: true
     }
   ],
