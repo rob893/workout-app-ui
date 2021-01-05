@@ -1,4 +1,4 @@
-import { Environment } from 'src/app/models/core';
+import { Environment } from 'src/app/core/models/core';
 import { commonEnvironment } from './environment.common';
 
 export const environment: Environment = {

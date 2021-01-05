@@ -12,10 +12,14 @@ import { MaterialModule } from './material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { WelcomeComponent } from './views/welcome/welcome.component';
 import { ThemePickerModule } from './components/theme-picker/theme-picker.component';
-import { HttpClientModule } from '@angular/common/http';
-import { AuthService } from './services/auth.service';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthService } from './core/services/auth.service';
 import { JwtModule, JWT_OPTIONS, JwtConfig } from '@auth0/angular-jwt';
-import { EnvironmentService } from './services/environment.service';
+import { EnvironmentService } from './core/services/environment.service';
+import { LoginComponent } from './views/login/login.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { DashboardComponent } from './views/dashboard/dashboard.component';
+import { RefreshTokenInterceptorInterceptor } from './core/interceptors/refresh-token-interceptor.interceptor';
 
 function jwtOptionsFactory(authService: AuthService, envService: EnvironmentService): JwtConfig {
   return {
@@ -25,7 +29,14 @@ function jwtOptionsFactory(authService: AuthService, envService: EnvironmentServ
 }
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, SidenavListComponent, WelcomeComponent],
+  declarations: [
+    AppComponent,
+    HeaderComponent,
+    SidenavListComponent,
+    WelcomeComponent,
+    LoginComponent,
+    DashboardComponent
+  ],
   imports: [
     JwtModule.forRoot({
       jwtOptionsProvider: {
@@ -34,6 +45,7 @@ function jwtOptionsFactory(authService: AuthService, envService: EnvironmentServ
         deps: [AuthService, EnvironmentService]
       }
     }),
+    ReactiveFormsModule,
     MaterialModule,
     FlexLayoutModule,
     HttpClientModule,
@@ -43,7 +55,13 @@ function jwtOptionsFactory(authService: AuthService, envService: EnvironmentServ
     ThemePickerModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: RefreshTokenInterceptorInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

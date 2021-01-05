@@ -42,14 +42,13 @@ export class AuthService extends WorkoutAppBaseService {
   public constructor(
     httpClient: HttpClient,
     localStorageService: LocalStorageService,
-    jwtHelperService: JwtHelperService,
     environment: EnvironmentService,
     logger: LoggerService
   ) {
     super(httpClient, environment, logger);
 
     this.localStorageService = localStorageService;
-    this.jwtHelperService = jwtHelperService;
+    this.jwtHelperService = new JwtHelperService();
   }
 
   public get isUserLoggedIn(): boolean {

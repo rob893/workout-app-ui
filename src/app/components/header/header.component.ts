@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ThemeService } from 'src/app/services/theme.service';
+import { ThemeService } from 'src/app/core/services/theme.service';
 
 @Component({
   selector: 'app-header',

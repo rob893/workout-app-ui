@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { BROWSER_STORAGE } from '../core/global-providers';
+import { BROWSER_STORAGE } from '../global-providers';
 import { EnvironmentService } from './environment.service';
 
 @Injectable({

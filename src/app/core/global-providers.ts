@@ -1,6 +1,6 @@
 import { InjectionToken } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { Environment, Logger } from '../models/core';
+import { Environment, Logger } from './models/core';
 
 export const BROWSER_STORAGE = new InjectionToken<Storage>('Browser Storage', {
   providedIn: 'root',

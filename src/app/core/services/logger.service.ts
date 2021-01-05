@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { LOGGER } from '../core/global-providers';
+import { LOGGER } from '../global-providers';
 import { Logger } from '../models/core';
 
 @Injectable({
