@@ -11,9 +11,8 @@ describe('ThemePickerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ThemePickerComponent ]
-    })
-    .compileComponents();
+      declarations: [ThemePickerComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
