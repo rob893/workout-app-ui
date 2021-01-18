@@ -1,30 +1,49 @@
-<section class="signup-form">
-  <mat-card class="login-card">
-    <mat-card-header>
-      <mat-card-title>Login</mat-card-title>
-    </mat-card-header>
+<div fxLayout="row" fxLayoutAlign="center center" class="login-page">
+  <section>
+    <mat-card class="login-card">
+      <mat-card-header fxLayoutAlign="center center">
+        <mat-card-title>Login</mat-card-title>
+      </mat-card-header>
 
-    <form
-      fxLayout="column"
-      fxLayoutAlign="center center"
-      fxLayoutGap="10px"
-      [formGroup]="loginForm"
-      (ngSubmit)="onSubmit()"
-    >
-      <mat-form-field>
-        <input matInput placeholder="Your Username" formControlName="username" />
-        <mat-error>Missing username.</mat-error>
-        <mat-hint>Please enter your username.</mat-hint>
-      </mat-form-field>
-      <mat-form-field>
-        <input type="password" matInput placeholder="Your password" formControlName="password" />
-        <mat-error>Missing password.</mat-error>
-        <mat-hint>Please enter your password.</mat-hint>
-      </mat-form-field>
+      <form
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        fxLayoutGap="10px"
+        [formGroup]="loginForm"
+        (ngSubmit)="login()"
+      >
+        <mat-form-field>
+          <input matInput placeholder="Your Username" formControlName="username" autocomplete="username" />
+          <mat-error>Missing username.</mat-error>
+          <mat-hint>Please enter your username.</mat-hint>
+        </mat-form-field>
+        <mat-form-field>
+          <input
+            type="password"
+            matInput
+            placeholder="Your password"
+            formControlName="password"
+            autocomplete="current-password"
+          />
+          <mat-error>Missing password.</mat-error>
+          <mat-hint>Please enter your password.</mat-hint>
+        </mat-form-field>
 
-      <mat-card-actions>
-        <button type="submit" mat-raised-button color="primary" [disabled]="loginForm.invalid">Login</button>
-      </mat-card-actions>
-    </form>
-  </mat-card>
-</section>
+        <div *ngIf="loading; else elseNotLoading">
+          <mat-card-actions>
+            <mat-spinner [diameter]="50"></mat-spinner>
+          </mat-card-actions>
+        </div>
+
+        <ng-template #elseNotLoading>
+          <mat-card-actions>
+            <button type="submit" mat-raised-button color="primary" [disabled]="loginForm.invalid">Login</button>
+            <button type="reset" mat-raised-button color="warn" (click)="clearLoginForm()">Clear</button>
+          </mat-card-actions>
+
+          <p><b>Or</b></p>
+        </ng-template>
+      </form>
+    </mat-card>
+  </section>
+</div>
