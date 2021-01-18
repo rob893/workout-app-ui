@@ -11,7 +11,6 @@ import { SidenavListComponent } from './components/sidenav-list/sidenav-list.com
 import { MaterialModule } from './material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { WelcomeComponent } from './views/welcome/welcome.component';
-import { ThemePickerModule } from './components/theme-picker/theme-picker.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthService } from './core/services/auth.service';
 import { JwtModule, JWT_OPTIONS, JwtConfig } from '@auth0/angular-jwt';
@@ -52,7 +51,6 @@ function jwtOptionsFactory(authService: AuthService, envService: EnvironmentServ
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    ThemePickerModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [

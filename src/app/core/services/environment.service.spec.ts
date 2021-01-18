@@ -6,6 +6,8 @@ function getEnvMock(env?: Partial<Environment>): Environment {
     production: false,
     env: 'development',
     localStoragePrefix: 'test-prefix',
+    workoutAppBaseUrl: 'https://testurl.com',
+    allowedHosts: ['https://testurl.com'],
     ...env
   };
 }
