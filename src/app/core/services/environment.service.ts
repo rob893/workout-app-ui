@@ -31,4 +31,8 @@ export class EnvironmentService implements Environment {
   public get allowedHosts(): string[] {
     return [...this.environment.allowedHosts];
   }
+
+  public get googleAuthClientId(): string {
+    return this.environment.googleAuthClientId;
+  }
 }

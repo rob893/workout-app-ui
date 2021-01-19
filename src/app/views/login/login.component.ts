@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
+import { GoogleAuthService } from 'src/app/core/services/google-auth.service';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
@@ -15,8 +16,11 @@ export class LoginComponent {
 
   private readonly authService: AuthService;
 
-  public constructor(authService: AuthService) {
+  private readonly googleAuthService: GoogleAuthService;
+
+  public constructor(authService: AuthService, googleAuthService: GoogleAuthService) {
     this.authService = authService;
+    this.googleAuthService = googleAuthService;
 
     this.loginForm = new FormGroup({
       username: new FormControl('', {
@@ -27,6 +31,10 @@ export class LoginComponent {
   }
 
   public login(): void {
+    if (this.loading) {
+      return;
+    }
+
     this.loading = true;
     this.authService
       .login(this.loginForm.value.username, this.loginForm.value.password)
@@ -43,6 +51,20 @@ export class LoginComponent {
           console.log(error);
         }
       );
+  }
+
+  public async googleLogin(): Promise<void> {
+    this.loading = true;
+
+    try {
+      const googleUser = await this.googleAuthService.signIn();
+      const idToken = googleUser.getAuthResponse().id_token;
+      await this.authService.loginGoogle(idToken).toPromise();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.loading = false;
+    }
   }
 
   public clearLoginForm(): void {

@@ -4,6 +4,7 @@ export interface Environment {
   localStoragePrefix: string;
   workoutAppBaseUrl: string;
   allowedHosts: string[];
+  googleAuthClientId: string;
 }
 
 export interface Logger {

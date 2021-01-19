@@ -5,44 +5,48 @@
         <mat-card-title>Login</mat-card-title>
       </mat-card-header>
 
-      <form
-        fxLayout="column"
-        fxLayoutAlign="center center"
-        fxLayoutGap="10px"
-        [formGroup]="loginForm"
-        (ngSubmit)="login()"
-      >
-        <mat-form-field>
-          <input matInput placeholder="Your Username" formControlName="username" autocomplete="username" />
-          <mat-error>Missing username.</mat-error>
-          <mat-hint>Please enter your username.</mat-hint>
-        </mat-form-field>
-        <mat-form-field>
-          <input
-            type="password"
-            matInput
-            placeholder="Your password"
-            formControlName="password"
-            autocomplete="current-password"
-          />
-          <mat-error>Missing password.</mat-error>
-          <mat-hint>Please enter your password.</mat-hint>
-        </mat-form-field>
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <mat-card-content fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
+          <mat-form-field>
+            <input matInput placeholder="Your Username" formControlName="username" autocomplete="username" />
+            <mat-error>Missing username.</mat-error>
+            <mat-hint>Please enter your username.</mat-hint>
+          </mat-form-field>
 
-        <div *ngIf="loading; else elseNotLoading">
-          <mat-card-actions>
-            <mat-spinner [diameter]="50"></mat-spinner>
-          </mat-card-actions>
-        </div>
+          <mat-form-field>
+            <input
+              type="password"
+              matInput
+              placeholder="Your password"
+              formControlName="password"
+              autocomplete="current-password"
+            />
+            <mat-error>Missing password.</mat-error>
+            <mat-hint>Please enter your password.</mat-hint>
+          </mat-form-field>
 
-        <ng-template #elseNotLoading>
-          <mat-card-actions>
-            <button type="submit" mat-raised-button color="primary" [disabled]="loginForm.invalid">Login</button>
-            <button type="reset" mat-raised-button color="warn" (click)="clearLoginForm()">Clear</button>
-          </mat-card-actions>
+          <div *ngIf="loading; else elseNotLoading">
+            <mat-card-actions>
+              <mat-spinner [diameter]="50"></mat-spinner>
+            </mat-card-actions>
+          </div>
 
-          <p><b>Or</b></p>
-        </ng-template>
+          <ng-template #elseNotLoading>
+            <mat-card-actions>
+              <button type="submit" mat-raised-button color="primary" [disabled]="loginForm.invalid">Login</button>
+              <button type="reset" mat-raised-button color="warn" (click)="clearLoginForm()">Clear</button>
+            </mat-card-actions>
+
+            <p><b>Or</b></p>
+
+            <mat-card-actions>
+              <button type="button" mat-raised-button class="google-btn">
+                <img src="assets/img/google-logo.png" alt="Google logo" class="google-btn-logo" />
+                <span class="google-btn-text">Continue with Google</span>
+              </button>
+            </mat-card-actions>
+          </ng-template>
+        </mat-card-content>
       </form>
     </mat-card>
   </section>
