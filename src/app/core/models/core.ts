@@ -8,10 +8,10 @@ export interface Environment {
 }
 
 export interface Logger {
-  debug(...args: any[]): void;
-  info(...args: any[]): void;
-  warn(...args: any[]): void;
-  error(...args: any[]): void;
+  debug(message?: any, ...optionalParams: any[]): void;
+  info(message?: any, ...optionalParams: any[]): void;
+  warn(message?: any, ...optionalParams: any[]): void;
+  error(message?: any, ...optionalParams: any[]): void;
 }
 
 export type JSONPrimitive = string | number | boolean | null;

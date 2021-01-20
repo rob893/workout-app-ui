@@ -12,19 +12,19 @@ export class LoggerService implements Logger {
     this.logger = logger;
   }
 
-  public debug(...args: any[]): void {
-    this.logger.debug(args);
+  public debug(message?: unknown, ...optionalParams: any[]): void {
+    this.logger.debug(message, ...optionalParams);
   }
 
-  public info(...args: any[]): void {
-    this.logger.debug(args);
+  public info(message?: unknown, ...optionalParams: any[]): void {
+    this.logger.debug(message, ...optionalParams);
   }
 
-  public warn(...args: any[]): void {
-    this.logger.debug(args);
+  public warn(message?: unknown, ...optionalParams: any[]): void {
+    this.logger.debug(message, ...optionalParams);
   }
 
-  public error(...args: any[]): void {
-    this.logger.debug(args);
+  public error(message?: unknown, ...optionalParams: any[]): void {
+    this.logger.debug(message, ...optionalParams);
   }
 }
