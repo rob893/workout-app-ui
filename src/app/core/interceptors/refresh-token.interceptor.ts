@@ -15,6 +15,7 @@ export class RefreshTokenInterceptor implements HttpInterceptor {
   public intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       catchError(error => {
+        console.log('In RefreshTokenInterceptor');
         console.log(error);
         return throwError(error);
       })

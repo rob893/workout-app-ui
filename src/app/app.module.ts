@@ -19,6 +19,7 @@ import { LoginComponent } from './views/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DashboardComponent } from './views/dashboard/dashboard.component';
 import { RefreshTokenInterceptor } from './core/interceptors/refresh-token.interceptor';
+import { SignupComponent } from './views/signup/signup.component';
 
 function jwtOptionsFactory(authService: AuthService, envService: EnvironmentService): JwtConfig {
   return {
@@ -34,7 +35,8 @@ function jwtOptionsFactory(authService: AuthService, envService: EnvironmentServ
     SidenavListComponent,
     WelcomeComponent,
     LoginComponent,
-    DashboardComponent
+    DashboardComponent,
+    SignupComponent
   ],
   imports: [
     JwtModule.forRoot({
