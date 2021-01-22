@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-welcome',
@@ -6,8 +7,15 @@ import { Component } from '@angular/core';
   styleUrls: ['./welcome.component.scss']
 })
 export class WelcomeComponent {
+  private readonly userService: UserService;
+
+  public constructor(userService: UserService) {
+    this.userService = userService;
+  }
+
   public test(): void {
-    (document.getElementById('themeAsset') as any).href =
-      'node_modules/@angular/material/prebuilt-themes/indigo-pink.css';
+    this.userService.getUsers().subscribe(res => {
+      console.log(res);
+    });
   }
 }

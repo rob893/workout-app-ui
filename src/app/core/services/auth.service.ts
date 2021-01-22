@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Observable, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { EMPTY, from, Observable, Subject } from 'rxjs';
+import { map, take } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 import { LoginResponse, RefreshTokenResponse, RegisterResponse, RegisterUserDto } from '../models/dtos';
 import { User } from '../models/entities';
@@ -183,27 +183,32 @@ export class AuthService extends WorkoutAppBaseService {
     this.authChanged.next(false);
   }
 
-  public async getAccessToken(): Promise<string | null> {
+  public getAccessToken(): Observable<string | null> {
     if (!this.accessToken) {
-      return null;
+      this.logger.debug('Access token is null.');
+      return EMPTY;
     }
 
     if (this.isTokenExpired(this.accessToken)) {
-      await this.refreshAccessToken().toPromise();
+      this.logger.debug('Access token is expired. Refreshing.');
+      return this.refreshAccessToken().pipe(map(res => res.token));
     }
 
-    return this.accessToken;
+    this.logger.debug('Returning cached access token.');
+    return from(this.accessToken);
   }
 
   public refreshAccessToken(): Observable<RefreshTokenResponse> {
+    this.logger.debug('Refreshing access token.');
     return this.httpClient
-      .post<RefreshTokenResponse>('auth/refreshToken', {
+      .post<RefreshTokenResponse>(`${this.baseUrl}/auth/refreshToken`, {
         token: this.accessToken,
         refreshToken: this.refreshToken,
         deviceId: this.deviceId
       })
       .pipe(
         map(response => {
+          this.logger.debug('Access token refreshed.');
           const { token, refreshToken } = response;
 
           this.cachedAccessToken = token;
