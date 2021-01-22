@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { GoogleAuthService } from 'src/app/core/services/google-auth.service';
 import { AuthService } from '../../core/services/auth.service';
@@ -18,15 +18,16 @@ export class LoginComponent {
 
   private readonly googleAuthService: GoogleAuthService;
 
-  public constructor(authService: AuthService, googleAuthService: GoogleAuthService) {
+  private readonly formBuilder: FormBuilder;
+
+  public constructor(authService: AuthService, googleAuthService: GoogleAuthService, formBuilder: FormBuilder) {
     this.authService = authService;
     this.googleAuthService = googleAuthService;
+    this.formBuilder = formBuilder;
 
-    this.loginForm = new FormGroup({
-      username: new FormControl('', {
-        validators: [Validators.required]
-      }),
-      password: new FormControl('', { validators: [Validators.required] })
+    this.loginForm = this.formBuilder.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required]
     });
   }
 
