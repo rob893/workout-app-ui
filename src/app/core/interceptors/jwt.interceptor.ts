@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { EnvironmentService } from '../services/environment.service';
 import { LoggerService } from '../services/logger.service';
-import { first, mergeMap, take } from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
@@ -24,24 +24,32 @@ export class JwtInterceptor implements HttpInterceptor {
 
   public intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     if (!this.authService.isUserLoggedIn) {
-      this.logger.debug('User is not logged in. Not changing request.');
+      this.logger.debug(`${JwtInterceptor.name}.${this.intercept.name}: User is not logged in. Not changing request.`);
       return next.handle(request);
     }
 
     if (!this.isAllowedDomain(request)) {
-      this.logger.debug(`${request.url} is not an allowed host. Not changing request.`);
+      this.logger.debug(
+        `${JwtInterceptor.name}.${this.intercept.name}: ${request.url} is not an allowed host. Not changing request.`
+      );
+      return next.handle(request);
+    }
+
+    if (this.isAnonymousUrl(request)) {
+      this.logger.debug(
+        `${JwtInterceptor.name}.${this.intercept.name}: ${request.url} is an anonymous url. Not changing request.`
+      );
       return next.handle(request);
     }
 
     return this.authService.getAccessToken().pipe(
-      take(1),
       mergeMap(token => {
         if (!token) {
-          this.logger.debug('Token is null. Not changing request.');
+          this.logger.debug(`${JwtInterceptor.name}.${this.intercept.name}: Token is null. Not changing request.`);
           return next.handle(request);
         }
 
-        this.logger.debug('Token is not null. Adding to request.');
+        this.logger.debug(`${JwtInterceptor.name}.${this.intercept.name}: Adding authorization token to request.`);
         request = request.clone({
           setHeaders: {
             authorization: `Bearer ${token}`
@@ -50,6 +58,12 @@ export class JwtInterceptor implements HttpInterceptor {
 
         return next.handle(request);
       })
+    );
+  }
+
+  private isAnonymousUrl({ url }: HttpRequest<unknown>): boolean {
+    return this.envService.anonymousUrls.some(anonUrl =>
+      anonUrl instanceof RegExp ? anonUrl.test(url) : anonUrl === url
     );
   }
 

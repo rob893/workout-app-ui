@@ -1,9 +1,12 @@
 export interface Environment {
   production: boolean;
+  logLevel: LogLevel;
+  clientSideLoggingEnabled: boolean;
   env: 'development' | 'production';
   localStoragePrefix: string;
   workoutAppBaseUrl: string;
   allowedHosts: string[];
+  anonymousUrls: (string | RegExp)[];
   googleAuthClientId: string;
 }
 
@@ -12,6 +15,14 @@ export interface Logger {
   info(message?: any, ...optionalParams: any[]): void;
   warn(message?: any, ...optionalParams: any[]): void;
   error(message?: any, ...optionalParams: any[]): void;
+}
+
+export enum LogLevel {
+  Debug,
+  Info,
+  Warn,
+  Error,
+  Off
 }
 
 export type JSONPrimitive = string | number | boolean | null;
@@ -51,11 +62,7 @@ export interface Indexable<TValue = any> {
   [key: string]: TValue;
 }
 
-export enum HttpVerb {
-  Get = 'GET',
-  Post = 'POST',
-  Patch = 'PATCH',
-  Delete = 'DELETE',
-  Put = 'PUT',
-  Options = 'OPTIONS'
+export enum WorkAppServiceHeaders {
+  CorrelationId = 'x-correlation-id',
+  TokenExpired = 'x-token-expired'
 }

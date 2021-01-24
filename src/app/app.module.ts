@@ -18,6 +18,8 @@ import { DashboardComponent } from './views/dashboard/dashboard.component';
 import { RefreshTokenInterceptor } from './core/interceptors/refresh-token.interceptor';
 import { SignupComponent } from './views/signup/signup.component';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
+import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { UnauthorizedInterceptor } from './core/interceptors/unauthorized.interceptor';
 
 @NgModule({
   declarations: [
@@ -40,6 +42,11 @@ import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
+    JwtHelperService,
+    {
+      provide: JWT_OPTIONS,
+      useValue: null
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: RefreshTokenInterceptor,
@@ -48,6 +55,11 @@ import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: UnauthorizedInterceptor,
       multi: true
     }
   ],

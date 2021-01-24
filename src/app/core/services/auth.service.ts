@@ -1,12 +1,15 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { EMPTY, from, Observable, Subject } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { EMPTY, Observable, Subject } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
+import { WorkAppServiceHeaders } from '../models/core';
 import { LoginResponse, RefreshTokenResponse, RegisterResponse, RegisterUserDto } from '../models/dtos';
 import { User } from '../models/entities';
+import { HttpStatusCode } from '../models/http';
 import { EnvironmentService } from './environment.service';
+import { HttpService } from './http.service';
 import { LocalStorageService } from './local-storage.service';
 import { LoggerService } from './logger.service';
 import { WorkoutAppBaseService } from './workout-app-base.service';
@@ -40,15 +43,16 @@ export class AuthService extends WorkoutAppBaseService {
   private cachedLoggedInUser: User | null = null;
 
   public constructor(
-    httpClient: HttpClient,
+    httpClient: HttpService,
     localStorageService: LocalStorageService,
     environment: EnvironmentService,
+    jwtHelperService: JwtHelperService,
     logger: LoggerService
   ) {
     super(httpClient, environment, logger);
 
     this.localStorageService = localStorageService;
-    this.jwtHelperService = new JwtHelperService();
+    this.jwtHelperService = jwtHelperService;
   }
 
   public get isUserLoggedIn(): boolean {
@@ -113,14 +117,18 @@ export class AuthService extends WorkoutAppBaseService {
   }
 
   public registerUser(registerUserDto: RegisterUserDto): Observable<RegisterResponse> {
+    this.logger.info(`${AuthService.name}.${this.registerUser.name}: Registering user.`);
+
     return this.httpClient
       .post<RegisterResponse>(`${this.baseUrl}/auth/register`, {
         ...registerUserDto,
         deviceId: this.deviceId
       })
       .pipe(
-        map(response => {
+        tap(response => {
           this.handleLoginOrRegisterResponse(response);
+
+          this.logger.info(`${AuthService.name}.${this.registerUser.name}: Registering user account.`);
 
           return response;
         })
@@ -128,6 +136,10 @@ export class AuthService extends WorkoutAppBaseService {
   }
 
   public registerUserUsingGoogleAccount(username: string, idToken: string): Observable<RegisterResponse> {
+    this.logger.info(
+      `${AuthService.name}.${this.registerUserUsingGoogleAccount.name}: Registering user using Google account.`
+    );
+
     return this.httpClient
       .post<RegisterResponse>(`${this.baseUrl}/auth/register/google`, {
         username,
@@ -135,8 +147,12 @@ export class AuthService extends WorkoutAppBaseService {
         deviceId: this.deviceId
       })
       .pipe(
-        map(response => {
+        tap(response => {
           this.handleLoginOrRegisterResponse(response);
+
+          this.logger.info(
+            `${AuthService.name}.${this.registerUserUsingGoogleAccount.name}: Register user using Google account complete.`
+          );
 
           return response;
         })
@@ -144,6 +160,8 @@ export class AuthService extends WorkoutAppBaseService {
   }
 
   public login(username: string, password: string): Observable<LoginResponse> {
+    this.logger.info(`${AuthService.name}.${this.login.name}: Logging the user in.`);
+
     return this.httpClient
       .post<LoginResponse>(`${this.baseUrl}/auth/login`, {
         username,
@@ -151,8 +169,10 @@ export class AuthService extends WorkoutAppBaseService {
         deviceId: this.deviceId
       })
       .pipe(
-        map(response => {
+        tap(response => {
           this.handleLoginOrRegisterResponse(response);
+
+          this.logger.info(`${AuthService.name}.${this.login.name}: User login complete.`);
 
           return response;
         })
@@ -160,14 +180,18 @@ export class AuthService extends WorkoutAppBaseService {
   }
 
   public loginGoogle(idToken: string): Observable<LoginResponse> {
+    this.logger.info(`${AuthService.name}.${this.loginGoogle.name}: Logging the user in using Google.`);
+
     return this.httpClient
       .post<LoginResponse>(`${this.baseUrl}/auth/login/google`, {
         idToken,
         deviceId: this.deviceId
       })
       .pipe(
-        map(response => {
+        tap(response => {
           this.handleLoginOrRegisterResponse(response);
+
+          this.logger.info(`${AuthService.name}.${this.loginGoogle.name}: User Google login complete.`);
 
           return response;
         })
@@ -175,31 +199,39 @@ export class AuthService extends WorkoutAppBaseService {
   }
 
   public logout(): void {
+    this.logger.info(`${AuthService.name}.${this.logout.name}: Logging the user out.`);
+
     this.localStorageService.clear();
     this.cachedDeviceId = null;
     this.cachedAccessToken = null;
     this.cachedRefreshToken = null;
     this.cachedLoggedInUser = null;
     this.authChanged.next(false);
+
+    this.logger.info(`${AuthService.name}.${this.logout.name}: User has been logged out.`);
   }
 
   public getAccessToken(): Observable<string | null> {
     if (!this.accessToken) {
-      this.logger.debug('Access token is null.');
+      this.logger.debug(`${AuthService.name}.${this.getAccessToken.name}: Access token is null.`);
       return EMPTY;
     }
 
     if (this.isTokenExpired(this.accessToken)) {
-      this.logger.debug('Access token is expired. Refreshing.');
+      this.logger.debug(`${AuthService.name}.${this.getAccessToken.name}: Access token is expired. Refreshing.`);
       return this.refreshAccessToken().pipe(map(res => res.token));
     }
 
-    this.logger.debug('Returning cached access token.');
-    return from(this.accessToken);
+    this.logger.debug(`${AuthService.name}.${this.getAccessToken.name}: Returning cached access token.`);
+    return new Observable<string | null>(subscriber => {
+      subscriber.next(this.accessToken);
+      subscriber.complete();
+    });
   }
 
   public refreshAccessToken(): Observable<RefreshTokenResponse> {
-    this.logger.debug('Refreshing access token.');
+    this.logger.info(`${AuthService.name}.${this.refreshAccessToken.name}: Refreshing access token.`);
+
     return this.httpClient
       .post<RefreshTokenResponse>(`${this.baseUrl}/auth/refreshToken`, {
         token: this.accessToken,
@@ -207,8 +239,7 @@ export class AuthService extends WorkoutAppBaseService {
         deviceId: this.deviceId
       })
       .pipe(
-        map(response => {
-          this.logger.debug('Access token refreshed.');
+        tap(response => {
           const { token, refreshToken } = response;
 
           this.cachedAccessToken = token;
@@ -217,9 +248,27 @@ export class AuthService extends WorkoutAppBaseService {
           this.localStorageService.setItem(this.accessTokenStorageKey, token);
           this.localStorageService.setItem(this.refreshTokenStorageKey, refreshToken);
 
+          this.logger.info(`${AuthService.name}.${this.getAccessToken.name}: Access token refreshed.`);
+
           return response;
         })
       );
+  }
+
+  public shouldRefreshAccessTokenAndRetryRequestForError(error: HttpErrorResponse): boolean {
+    return error.status === HttpStatusCode.Unauthorized && error.headers.has(WorkAppServiceHeaders.TokenExpired);
+  }
+
+  public shouldErrorLogUserOut(error: unknown): boolean {
+    if (
+      error instanceof HttpErrorResponse &&
+      error.status === HttpStatusCode.Unauthorized &&
+      !this.shouldRefreshAccessTokenAndRetryRequestForError(error)
+    ) {
+      return false;
+    }
+
+    return false;
   }
 
   public isTokenExpired(token: string, expOffsetInSeconds: number = 300): boolean {

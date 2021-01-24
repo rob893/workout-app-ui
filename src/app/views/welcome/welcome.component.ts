@@ -18,4 +18,10 @@ export class WelcomeComponent {
       console.log(res);
     });
   }
+
+  public test2(): void {
+    this.userService.getUser(1).subscribe(res => {
+      console.log(res);
+    });
+  }
 }

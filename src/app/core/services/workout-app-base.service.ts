@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { EnvironmentService } from './environment.service';
+import { HttpService } from './http.service';
 import { LoggerService } from './logger.service';
 
 export abstract class WorkoutAppBaseService {
@@ -7,11 +7,11 @@ export abstract class WorkoutAppBaseService {
 
   protected readonly environment: EnvironmentService;
 
-  protected readonly httpClient: HttpClient;
+  protected readonly httpClient: HttpService;
 
   protected readonly baseUrl: string;
 
-  public constructor(httpClient: HttpClient, environment: EnvironmentService, logger: LoggerService) {
+  public constructor(httpClient: HttpService, environment: EnvironmentService, logger: LoggerService) {
     this.logger = logger;
     this.environment = environment;
     this.httpClient = httpClient;

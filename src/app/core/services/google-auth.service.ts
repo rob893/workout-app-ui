@@ -63,7 +63,7 @@ export class GoogleAuthService {
   }
 
   public installClient(): Promise<void> {
-    this.logger.debug('Installing gapi client...');
+    this.logger.debug(`${GoogleAuthService.name}.${this.installClient.name}: Installing gapi client...`);
 
     return new Promise(resolve => {
       if (!this.gapiScriptCreated) {
@@ -76,20 +76,20 @@ export class GoogleAuthService {
         document.head.appendChild(script);
 
         script.onload = () => {
-          this.logger.debug('gapi client installation complete.');
+          this.logger.debug(`${GoogleAuthService.name}.${this.installClient.name}: gapi client installation complete.`);
           resolve();
         };
       } else {
-        this.logger.debug('gapi client already installed.');
+        this.logger.debug(`${GoogleAuthService.name}.${this.installClient.name}: gapi client already installed.`);
         resolve();
       }
     });
   }
 
   public async loadGapiAuth2(): Promise<void> {
-    this.logger.debug('Loading gapi auth2 library...');
+    this.logger.debug(`${GoogleAuthService.name}.${this.loadGapiAuth2.name}: Loading gapi auth2 library...`);
     if (this.gapiAuth2Loaded) {
-      this.logger.debug('gapi auth2 library already loaded.');
+      this.logger.debug(`${GoogleAuthService.name}.${this.loadGapiAuth2.name}: gapi auth2 library already loaded.`);
       return;
     }
 
@@ -99,17 +99,19 @@ export class GoogleAuthService {
 
     return new Promise(resolve => {
       gapi.load('auth2', () => {
-        this.logger.debug('gapi auth2 library loaded.');
+        this.logger.debug(`${GoogleAuthService.name}.${this.loadGapiAuth2.name}: gapi auth2 library loaded.`);
         resolve();
       });
     });
   }
 
   public async initializeAuth2(): Promise<void> {
-    this.logger.debug('Initializing gapi auth2 client');
+    this.logger.debug(`${GoogleAuthService.name}.${this.initializeAuth2.name}: Initializing gapi auth2 client`);
 
     if (this.gapiAuth2Initialized) {
-      this.logger.debug('gapi auth2 client already initialized.');
+      this.logger.debug(
+        `${GoogleAuthService.name}.${this.initializeAuth2.name}: gapi auth2 client already initialized.`
+      );
       return;
     }
 
@@ -118,13 +120,13 @@ export class GoogleAuthService {
     }
 
     gapi.auth2.init(this.googleAuthConfig).then(googleAuth => {
-      this.logger.debug('gapi auth2 client initialized.');
+      this.logger.debug(`${GoogleAuthService.name}.${this.initializeAuth2.name}: gapi auth2 client initialized.`);
       this.googleAuth = googleAuth;
     });
   }
 
   public async signOut(): Promise<void> {
-    this.logger.debug('Signing out of google auth');
+    this.logger.debug(`${GoogleAuthService.name}.${this.signOut.name}: Signing out of google auth`);
 
     if (!this.gapiAuth2Initialized) {
       await this.initializeAuth2();
@@ -138,7 +140,7 @@ export class GoogleAuthService {
   }
 
   public async signIn(): Promise<gapi.auth2.GoogleUser> {
-    this.logger.debug('Signing into google auth');
+    this.logger.debug(`${GoogleAuthService.name}.${this.signIn.name}: Signing into google auth`);
 
     if (!this.gapiAuth2Initialized) {
       await this.initializeAuth2();

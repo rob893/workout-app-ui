@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { ENVIRONMENT } from '../global-providers';
-import { Environment } from '../models/core';
+import { Environment, LogLevel } from '../models/core';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +16,14 @@ export class EnvironmentService implements Environment {
     return this.environment.production;
   }
 
+  public get logLevel(): LogLevel {
+    return this.environment.logLevel;
+  }
+
+  public get clientSideLoggingEnabled(): boolean {
+    return this.environment.clientSideLoggingEnabled;
+  }
+
   public get localStoragePrefix(): string {
     return this.environment.localStoragePrefix;
   }
@@ -26,6 +34,10 @@ export class EnvironmentService implements Environment {
 
   public get workoutAppBaseUrl(): string {
     return this.environment.workoutAppBaseUrl;
+  }
+
+  public get anonymousUrls(): (string | RegExp)[] {
+    return [...this.environment.anonymousUrls];
   }
 
   public get allowedHosts(): string[] {
