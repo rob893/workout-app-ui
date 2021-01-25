@@ -265,7 +265,7 @@ export class AuthService extends WorkoutAppBaseService {
       error.status === HttpStatusCode.Unauthorized &&
       !this.shouldRefreshAccessTokenAndRetryRequestForError(error)
     ) {
-      return false;
+      return true;
     }
 
     return false;

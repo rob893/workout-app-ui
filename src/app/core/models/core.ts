@@ -8,6 +8,13 @@ export interface Environment {
   allowedHosts: string[];
   anonymousUrls: (string | RegExp)[];
   googleAuthClientId: string;
+  retryOptions: RetryOptions;
+}
+
+export interface RetryOptions {
+  maxRetryAttempts: number;
+  enabled: boolean;
+  delayTimeInMs: number;
 }
 
 export interface Logger {

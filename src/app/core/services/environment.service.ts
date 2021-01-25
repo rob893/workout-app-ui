@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { ENVIRONMENT } from '../global-providers';
-import { Environment, LogLevel } from '../models/core';
+import { Environment, LogLevel, RetryOptions } from '../models/core';
 
 @Injectable({
   providedIn: 'root'
@@ -46,5 +46,9 @@ export class EnvironmentService implements Environment {
 
   public get googleAuthClientId(): string {
     return this.environment.googleAuthClientId;
+  }
+
+  public get retryOptions(): RetryOptions {
+    return { ...this.environment.retryOptions };
   }
 }

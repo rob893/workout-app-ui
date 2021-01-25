@@ -21,4 +21,10 @@ export class UserService extends WorkoutAppBaseService {
   public getUser(userId: number): Observable<User> {
     return this.httpClient.get<User>(`${this.baseUrl}/users/${userId}`);
   }
+
+  public test(status: number, delay: number = 0, statusAfter: number = 200, per: number = 0): Observable<unknown> {
+    return this.httpClient.get<unknown>(
+      `${this.baseUrl}/test?status=${status}&delay=${delay}&statusAfter=${statusAfter}&per=${per}`
+    );
+  }
 }

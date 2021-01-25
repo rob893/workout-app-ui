@@ -13,13 +13,14 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { WelcomeComponent } from './views/welcome/welcome.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoginComponent } from './views/login/login.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DashboardComponent } from './views/dashboard/dashboard.component';
 import { RefreshTokenInterceptor } from './core/interceptors/refresh-token.interceptor';
 import { SignupComponent } from './views/signup/signup.component';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { UnauthorizedInterceptor } from './core/interceptors/unauthorized.interceptor';
+import { RetryInterceptor } from './core/interceptors/retry.interceptor';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { UnauthorizedInterceptor } from './core/interceptors/unauthorized.interc
     SignupComponent
   ],
   imports: [
+    FormsModule,
     ReactiveFormsModule,
     MaterialModule,
     FlexLayoutModule,
@@ -60,6 +62,11 @@ import { UnauthorizedInterceptor } from './core/interceptors/unauthorized.interc
     {
       provide: HTTP_INTERCEPTORS,
       useClass: UnauthorizedInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: RetryInterceptor,
       multi: true
     }
   ],

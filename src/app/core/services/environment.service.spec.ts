@@ -12,6 +12,11 @@ function getEnvMock(env?: Partial<Environment>): Environment {
     allowedHosts: ['https://testurl.com'],
     googleAuthClientId: '123',
     anonymousUrls: [],
+    retryOptions: {
+      enabled: true,
+      maxRetryAttempts: 3,
+      delayTimeInMs: 100
+    },
     ...env
   };
 }
