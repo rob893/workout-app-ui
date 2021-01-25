@@ -1,6 +1,6 @@
-<div fxLayout="row" fxLayoutAlign="center center" class="login-page">
+<div fxLayout="row" fxLayoutAlign="center center" class="signup-page">
   <section>
-    <mat-card class="login-card">
+    <mat-card class="signup-card">
       <mat-card-header fxLayoutAlign="center center">
         <mat-card-title>Signup</mat-card-title>
       </mat-card-header>
@@ -8,7 +8,13 @@
       <form [formGroup]="signupForm" (ngSubmit)="signup()">
         <mat-card-content fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
           <mat-form-field>
-            <input matInput placeholder="Your Username" formControlName="username" autocomplete="username" />
+            <input
+              type="text"
+              matInput
+              placeholder="Your Username"
+              formControlName="username"
+              autocomplete="username"
+            />
             <mat-error>Missing username.</mat-error>
             <mat-hint>Please enter your username.</mat-hint>
           </mat-form-field>
@@ -19,10 +25,52 @@
               matInput
               placeholder="Your password"
               formControlName="password"
-              autocomplete="current-password"
+              autocomplete="new-password"
             />
             <mat-error>Missing password.</mat-error>
             <mat-hint>Please enter your password.</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input
+              type="password"
+              matInput
+              placeholder="Confirm password"
+              formControlName="confirmPassword"
+              autocomplete="new-password"
+            />
+            <mat-error>Passwords must match</mat-error>
+            <mat-hint>Please re-type your password.</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input
+              type="text"
+              matInput
+              placeholder="Your First Name"
+              formControlName="firstName"
+              autocomplete="given-name"
+            />
+            <mat-error>Missing first name.</mat-error>
+            <mat-hint>Please enter your first name.</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input
+              type="text"
+              matInput
+              placeholder="Your Last Name"
+              formControlName="lastName"
+              autocomplete="family-name"
+            />
+            <mat-error>Missing last name.</mat-error>
+            <mat-hint>Please enter your last name.</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input type="email" matInput placeholder="Your email" formControlName="email" autocomplete="email" />
+            <mat-error>Missing email.</mat-error>
+            <mat-hint>Please enter your email.</mat-hint>
           </mat-form-field>
 
           <div *ngIf="loading; else elseNotLoading">

@@ -22,8 +22,6 @@ export class LoginComponent {
 
   private readonly googleAuthService: GoogleAuthService;
 
-  private readonly formBuilder: FormBuilder;
-
   private readonly router: Router;
 
   public constructor(
@@ -34,10 +32,9 @@ export class LoginComponent {
   ) {
     this.authService = authService;
     this.googleAuthService = googleAuthService;
-    this.formBuilder = formBuilder;
     this.router = router;
 
-    this.loginForm = this.formBuilder.group({
+    this.loginForm = formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
