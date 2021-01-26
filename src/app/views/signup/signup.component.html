@@ -2,10 +2,45 @@
   <section>
     <mat-card class="signup-card">
       <mat-card-header fxLayoutAlign="center center">
-        <mat-card-title>Signup</mat-card-title>
+        <mat-card-title>Sign Up</mat-card-title>
       </mat-card-header>
 
-      <form [formGroup]="signupForm" (ngSubmit)="signup()">
+      <form
+        [formGroup]="signupUsingGoogleAccountForm"
+        *ngIf="socialLogin === 'Google'"
+        (ngSubmit)="registerUsingGoogleAccount()"
+      >
+        <mat-card-content fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
+          <mat-form-field>
+            <input
+              type="text"
+              matInput
+              placeholder="Your Username"
+              formControlName="username"
+              autocomplete="username"
+            />
+            <mat-error>Missing username.</mat-error>
+            <mat-hint>Please enter your username.</mat-hint>
+          </mat-form-field>
+
+          <div *ngIf="loading; else elseNotLoading">
+            <mat-card-actions>
+              <mat-spinner [diameter]="50"></mat-spinner>
+            </mat-card-actions>
+          </div>
+
+          <ng-template #elseNotLoading>
+            <mat-card-actions>
+              <button type="submit" mat-raised-button color="primary" [disabled]="signupUsingGoogleAccountForm.invalid">
+                Continue
+              </button>
+              <button type="reset" mat-raised-button color="warn" (click)="clearSignupUsingGoogleForm()">Clear</button>
+            </mat-card-actions>
+          </ng-template>
+        </mat-card-content>
+      </form>
+
+      <form [formGroup]="signupForm" *ngIf="socialLogin === null" (ngSubmit)="signup()">
         <mat-card-content fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
           <mat-form-field>
             <input
@@ -81,18 +116,11 @@
 
           <ng-template #elseNotLoading>
             <mat-card-actions>
-              <button type="submit" mat-raised-button color="primary" [disabled]="signupForm.invalid">Login</button>
+              <button type="submit" mat-raised-button color="primary" [disabled]="signupForm.invalid">Sign Up</button>
               <button type="reset" mat-raised-button color="warn" (click)="clearSignupForm()">Clear</button>
             </mat-card-actions>
 
-            <p><b>Or</b></p>
-
-            <mat-card-actions>
-              <button type="button" mat-raised-button class="google-btn">
-                <img src="assets/img/google-logo.png" alt="Google logo" class="google-btn-logo" />
-                <span class="google-btn-text">Continue with Google</span>
-              </button>
-            </mat-card-actions>
+            <a routerLink="/login">Already signed up? Log in!</a>
           </ng-template>
         </mat-card-content>
       </form>

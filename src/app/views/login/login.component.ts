@@ -71,6 +71,7 @@ export class LoginComponent {
       const googleUser = await this.googleAuthService.signIn();
       const idToken = googleUser.getAuthResponse().id_token;
       await this.authService.loginGoogle(idToken).toPromise();
+      this.router.navigateByUrl('/');
     } catch (error) {
       if (error instanceof HttpErrorResponse && error.status === HttpStatusCode.NotFound) {
         this.router.navigate(['/signup'], { queryParams: { socialLogin: LinkedAccountType.Google } });
